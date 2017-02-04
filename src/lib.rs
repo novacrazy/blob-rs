@@ -114,11 +114,11 @@ impl serde::Deserialize for Blob {
             type Value = Blob;
 
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("string or sequence")
+                f.write_str("base64 encoded string or byte sequence")
             }
 
             fn visit_str<E>(self, value: &str) -> Result<Self::Value, E> where E: serde::de::Error {
-                Ok(FromStr::from_str(value).unwrap())
+                FromStr::from_str(value).map_err(E::custom)
             }
 
             fn visit_bytes<E>(self, value: &[u8]) -> Result<Self::Value, E> where E: serde::de::Error {
