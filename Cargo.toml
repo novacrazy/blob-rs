@@ -1,0 +1,12 @@
+[package]
+authors = ["Aaron Trent <novacrazy@gmail.com>"]
+name = "blob"
+version = "0.1.0"
+
+[dependencies]
+base64 = "0.3.0"
+serde = "0.9.6"
+
+[dev-dependencies]
+serde_derive = "0.9.6"
+serde_json = "0.9.5"
