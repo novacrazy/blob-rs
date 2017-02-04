@@ -1,6 +1,13 @@
 [package]
 authors = ["Aaron Trent <novacrazy@gmail.com>"]
+description = "Blob serialization/deserialization utilities"
+categories = ["data-structures", "encoding"]
+documentation = "https://docs.rs/blob/"
+keywords = ["blob", "base64"]
+license = "MIT"
 name = "blob"
+readme = "README.md"
+repository = "https://github.com/novacrazy/blob-rs"
 version = "0.1.0"
 
 [dependencies]
