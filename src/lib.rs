@@ -174,3 +174,15 @@ impl<T> PartialEq<T> for Blob where Vec<u8>: PartialEq<T> {
         self.0 == *other
     }
 }
+
+impl AsRef<Vec<u8>> for Blob {
+    fn as_ref(&self) -> &Vec<u8> {
+        &self.0
+    }
+}
+
+impl AsMut<Vec<u8>> for Blob {
+    fn as_mut(&mut self) -> &mut Vec<u8> {
+        &mut self.0
+    }
+}
