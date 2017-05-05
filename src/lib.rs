@@ -72,7 +72,7 @@ impl Blob {
     }
 
     /// Decode a base-64 encoded string into a `Blob`
-    pub fn decode_base64(encoded: &str) -> Result<Blob, base64::Base64Error> {
+    pub fn decode_base64(encoded: &str) -> Result<Blob, base64::DecodeError> {
         Ok(Blob(base64::decode(encoded)?))
     }
 
@@ -83,7 +83,7 @@ impl Blob {
 }
 
 impl FromStr for Blob {
-    type Err = base64::Base64Error;
+    type Err = base64::DecodeError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(Blob(base64::decode(s)?))
@@ -106,11 +106,11 @@ impl serde::Serialize for Blob {
     }
 }
 
-impl serde::Deserialize for Blob {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: serde::Deserializer {
+impl<'de> serde::Deserialize<'de> for Blob {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: serde::Deserializer<'de> {
         struct BlobVisitor;
 
-        impl serde::de::Visitor for BlobVisitor {
+        impl<'de> serde::de::Visitor<'de> for BlobVisitor {
             type Value = Blob;
 
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
@@ -129,15 +129,11 @@ impl serde::Deserialize for Blob {
                 Ok(Blob(value))
             }
 
-            fn visit_seq<V>(self, mut visitor: V) -> Result<Self::Value, V::Error> where V: serde::de::SeqVisitor {
+            fn visit_seq<V>(self, mut visitor: V) -> Result<Self::Value, V::Error> where V: serde::de::SeqAccess<'de> {
                 // Preallocate the bytes vec if possible
-                let mut bytes = Vec::with_capacity({
-                    let (min, max) = visitor.size_hint();
+                let mut bytes = Vec::with_capacity(visitor.size_hint().unwrap_or(0));
 
-                    max.unwrap_or(min)
-                });
-
-                while let Some(byte) = visitor.visit()? {
+                while let Some(byte) = visitor.next_element()? {
                     bytes.push(byte);
                 }
 
@@ -145,7 +141,7 @@ impl serde::Deserialize for Blob {
             }
         }
 
-        deserializer.deserialize(BlobVisitor)
+        deserializer.deserialize_any(BlobVisitor)
     }
 }
 
