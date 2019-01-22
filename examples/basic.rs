@@ -7,7 +7,7 @@ use blob::Blob;
 const DATA: [u8; 5] = [0x1, 0x2, 0x3, 0x4, 0x5];
 
 fn main() {
-    let mut my_blob = Blob::from(&DATA[..]);
+    let mut my_blob: Blob = Blob::from(&DATA[..]);
 
     println!("{}", my_blob);
 

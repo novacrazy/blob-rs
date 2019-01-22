@@ -15,7 +15,7 @@ pub struct BlobFixture {
 
 #[test]
 fn test_blob() {
-    let blob = Blob::from(&DATA[..]);
+    let blob: Blob = Blob::from(&DATA[..]);
 
     let encoded = blob.encode_base64();
 
@@ -26,9 +26,11 @@ fn test_blob() {
 
 #[test]
 fn test_blob_serde() {
-    use serde_json::{to_string_pretty, from_str};
+    use serde_json::{from_str, to_string_pretty};
 
-    let fixture = BlobFixture { my_blob: Blob::from(&DATA[..]) };
+    let fixture = BlobFixture {
+        my_blob: Blob::from(&DATA[..]),
+    };
 
     let encoded = to_string_pretty(&fixture).unwrap();
 
@@ -43,7 +45,9 @@ fn test_blob_serde() {
 fn test_blob_array() {
     use serde_json::from_str;
 
-    let fixture_struct = BlobFixture { my_blob: Blob::from(&DATA[..]) };
+    let fixture_struct = BlobFixture {
+        my_blob: Blob::from(&DATA[..]),
+    };
 
     let fixture_str = r#"{"my_blob": [1, 2, 3, 4, 5]}"#;
 
